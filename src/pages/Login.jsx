@@ -1,26 +1,35 @@
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'; // Added createUserWithEmailAndPassword
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Shield, Lock, Mail } from 'lucide-react';
+import { Loader2, Shield, Lock, Mail, UserPlus } from 'lucide-react'; // Added UserPlus
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isRegistering, setIsRegistering] = useState(false); // New state for toggle
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleAuth = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
 
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            navigate('/admin');
+            if (isRegistering) {
+                await createUserWithEmailAndPassword(auth, email, password);
+                // After creating, we can navigate directly or show success. 
+                // Let's navigate to admin
+                navigate('/admin');
+            } else {
+                await signInWithEmailAndPassword(auth, email, password);
+                navigate('/admin');
+            }
         } catch (err) {
-            setError('ACCESS_DENIED: Invalid credentials.');
+            console.error(err);
+            setError(err.message || 'ACCESS_DENIED: Invalid credentials.');
         } finally {
             setLoading(false);
         }
@@ -48,7 +57,8 @@ export default function Login() {
                         </div>
                     )}
 
-                    <form onSubmit={handleLogin} className="space-y-6">
+                    <form onSubmit={handleAuth} className="space-y-6">
+                        {/* Inputs remain the same, just wrapped with new handler */}
                         <div>
                             <label className="mb-2 block text-xs font-mono font-medium text-slate-400 uppercase tracking-wider">Identity_Key (Email)</label>
                             <div className="relative">
@@ -80,12 +90,26 @@ export default function Login() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex w-full items-center justify-center rounded-lg bg-cyan-600/80 border border-cyan-500 px-4 py-3 font-bold text-white uppercase tracking-widest transition-all hover:bg-cyan-500 hover:text-black neon-glow disabled:opacity-50 disabled:cursor-not-allowed group"
+                            className={`flex w-full items-center justify-center rounded-lg border px-4 py-3 font-bold text-white uppercase tracking-widest transition-all neon-glow disabled:opacity-50 disabled:cursor-not-allowed group ${isRegistering ? 'bg-purple-600/80 border-purple-500 hover:bg-purple-500' : 'bg-cyan-600/80 border-cyan-500 hover:bg-cyan-500 hover:text-black'}`}
                         >
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {!loading && <span className="group-hover:translate-x-1 transition-transform">Authenticate_Session</span>}
+                            {!loading && (
+                                <span className="group-hover:translate-x-1 transition-transform">
+                                    {isRegistering ? 'Initialize_Protocol (Register)' : 'Authenticate_Session'}
+                                </span>
+                            )}
                         </button>
                     </form>
+
+                    <div className="mt-4 text-center">
+                        <button
+                            onClick={() => setIsRegistering(!isRegistering)}
+                            className="text-xs text-slate-500 hover:text-cyan-400 transition-colors uppercase tracking-wider font-mono flex items-center justify-center gap-2 mx-auto"
+                        >
+                            {isRegistering ? <Shield className="h-3 w-3" /> : <UserPlus className="h-3 w-3" />}
+                            {isRegistering ? 'Return to Login' : 'Create New Access Key'}
+                        </button>
+                    </div>
                 </div>
 
                 <p className="mt-6 text-center text-[10px] text-slate-600 font-mono uppercase tracking-[0.2em]">
