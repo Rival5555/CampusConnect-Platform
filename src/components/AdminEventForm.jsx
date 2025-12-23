@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Loader2, Image as ImageIcon } from 'lucide-react';
+import { Loader2, Image as ImageIcon, Upload } from 'lucide-react';
 import EventCard from './EventCard';
 import { createEvent } from '../lib/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebase';
 
 export default function AdminEventForm({ onSuccess }) {
     const [formData, setFormData] = useState({
@@ -14,6 +16,7 @@ export default function AdminEventForm({ onSuccess }) {
         posterUrl: ''
     });
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -45,6 +48,25 @@ export default function AdminEventForm({ onSuccess }) {
 
     const handleChange = (e) => {
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const storageRef = ref(storage, `events/${Date.now()}_${file.name}`);
+            const snapshot = await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+
+            setFormData(prev => ({ ...prev, posterUrl: downloadURL }));
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            alert("Failed to upload image. Please try again.");
+        } finally {
+            setUploading(false);
+        }
     };
 
     // Create a preview object
@@ -129,20 +151,29 @@ export default function AdminEventForm({ onSuccess }) {
                     </div>
 
                     <div>
-                        <label className="mb-1 block text-sm font-mono text-slate-400">POSTER_URL</label>
+                        <label className="mb-1 block text-sm font-mono text-slate-400">POSTER_IMAGE</label>
                         <div className="flex gap-2">
                             <input
                                 name="posterUrl"
-                                className="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-2 text-white placeholder:text-slate-600 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-all font-mono text-sm"
-                                placeholder="https://..."
+                                className="flex-1 rounded-lg border border-white/10 bg-black/20 px-4 py-2 text-white placeholder:text-slate-600 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-all font-mono text-sm"
+                                placeholder="https://... or upload image"
                                 value={formData.posterUrl}
                                 onChange={handleChange}
                             />
-                            <button type="button" className="flex-shrink-0 p-2 text-slate-500 hover:text-cyan-400 transition-colors">
-                                <ImageIcon className="h-5 w-5" />
-                            </button>
+                            <div className="relative">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    disabled={uploading}
+                                />
+                                <button type="button" className="h-full px-3 rounded-lg border border-white/10 bg-white/5 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/50 transition-all disabled:opacity-50">
+                                    {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
+                                </button>
+                            </div>
                         </div>
-                        <p className="mt-1 text-xs text-slate-600 font-mono">Recommended: Unsplash or stable image links</p>
+                        <p className="mt-1 text-xs text-slate-600 font-mono">Upload an image or paste a URL</p>
                     </div>
 
                     <div>
@@ -160,7 +191,7 @@ export default function AdminEventForm({ onSuccess }) {
 
                     <button
                         type="submit"
-                        disabled={loading}
+                        disabled={loading || uploading}
                         className="w-full rounded-lg bg-cyan-500/10 border border-cyan-500/50 py-3 font-bold text-cyan-400 uppercase tracking-widest transition-all hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] disabled:opacity-50 disabled:cursor-not-allowed neon-glow"
                     >
                         {loading ? <span className="flex items-center justify-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> PROCESSING...</span> : 'INITIATE_EVENT'}
