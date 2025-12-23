@@ -6,6 +6,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import PrivateRoute from './components/PrivateRoute';
 // import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
             />
           </Routes>
         </main>
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </BrowserRouter>
   );
