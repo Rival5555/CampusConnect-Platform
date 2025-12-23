@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'; // Added createUserWithEmailAndPassword
-import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Shield, Lock, Mail, UserPlus } from 'lucide-react'; // Added UserPlus
+import { Loader2, Shield, Lock, Mail, UserPlus } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -12,6 +11,8 @@ export default function Login() {
     const [isRegistering, setIsRegistering] = useState(false); // New state for toggle
     const navigate = useNavigate();
 
+    const { login, signup } = useAuth();
+
     const handleAuth = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -19,12 +20,12 @@ export default function Login() {
 
         try {
             if (isRegistering) {
-                await createUserWithEmailAndPassword(auth, email, password);
+                await signup(email, password);
                 // After creating, we can navigate directly or show success. 
                 // Let's navigate to admin
                 navigate('/admin');
             } else {
-                await signInWithEmailAndPassword(auth, email, password);
+                await login(email, password);
                 navigate('/admin');
             }
         } catch (err) {
