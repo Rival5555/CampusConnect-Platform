@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { signOut } from 'firebase/auth';
-import { auth } from '../firebase';
+// import { signOut } from 'firebase/auth';
+// import { auth } from '../firebase';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Plus, ArrowLeft, Trash2, Shield, Activity, Database } from 'lucide-react';
 import AdminEventForm from '../components/AdminEventForm';
@@ -31,8 +32,10 @@ export default function AdminDashboard() {
         }
     }, [view]);
 
+    const { logout } = useAuth();
+
     const handleLogout = async () => {
-        await signOut(auth);
+        await logout();
         navigate('/login');
     };
 
