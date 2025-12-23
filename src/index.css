@@ -1,0 +1,81 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  * {
+    cursor: none !important;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-50;
+    /* Light gray background */
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+.animate-reveal {
+  animation: reveal 0.8s cubic-bezier(0.5, 0, 0, 1) forwards;
+  opacity: 0;
+  /* Starts invisible */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.glass-panel {
+  @apply bg-slate-900/40 backdrop-blur-md border border-white/5 shadow-xl;
+}
+
+.glass-card {
+  @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl;
+}
+
+.neon-glow {
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+}
+
+.neon-glow:hover {
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-indigo-600;
+}

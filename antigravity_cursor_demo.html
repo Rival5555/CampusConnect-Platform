@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Cursor Demo</title>
+    <style>
+        :root {
+            --cursor-size-dot: 8px;
+            --cursor-size-ring: 40px;
+            --cursor-color: 14, 165, 233;
+            /* Cyan-500 equivalent */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0f172a;
+            /* Slate 900 */
+            color: #f8fafc;
+            font-family: 'Inter', system-ui, sans-serif;
+            cursor: none !important;
+            /* Hide default cursor */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        a,
+        button,
+        input {
+            cursor: none !important;
+        }
+
+        /* --- Cursor Styles --- */
+        .cursor-dot,
+        .cursor-ring {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+        }
+
+        .cursor-dot {
+            width: var(--cursor-size-dot);
+            height: var(--cursor-size-dot);
+            background-color: rgb(var(--cursor-color));
+            box-shadow: 0 0 10px rgba(var(--cursor-color), 0.8);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .cursor-ring {
+            width: var(--cursor-size-ring);
+            height: var(--cursor-size-ring);
+            border: 1px solid rgba(var(--cursor-color), 0.5);
+            background-color: rgba(var(--cursor-color), 0.05);
+            transition: width 0.3s, height 0.3s, border-color 0.3s, background-color 0.3s;
+            will-change: transform;
+        }
+
+        /* Hover State */
+        body.is-hovering .cursor-ring {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(var(--cursor-color), 0.15);
+            border-color: rgba(var(--cursor-color), 0.8);
+        }
+
+        body.is-hovering .cursor-dot {
+            opacity: 0.5;
+            animation: pulse-dot 1s infinite alternate;
+        }
+
+        @keyframes pulse-dot {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0.8;
+            }
+        }
+
+        /* --- Demo UI --- */
+        h1 {
+            font-size: 3rem;
+            font-weight: 200;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .interactive-btn {
+            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            border-radius: 999px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interactive-btn:hover {
+            background: rgba(var(--cursor-color), 0.2);
+            border-color: rgba(var(--cursor-color), 1);
+            box-shadow: 0 0 30px rgba(var(--cursor-color), 0.3);
+            transform: scale(1.05);
+        }
+
+        .grid-links {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .link-item {
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .link-item:hover {
+            border-color: rgba(var(--cursor-color), 0.5);
+            background: rgba(255, 255, 255, 0.02);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Antigravity Cursor</h1>
+
+    <button class="interactive-btn" data-magnetic="0.5">Hover Me</button>
+
+    <div class="grid-links">
+        <div class="link-item interactive-target">Link 1</div>
+        <div class="link-item interactive-target">Link 2</div>
+        <div class="link-item interactive-target">Link 3</div>
+    </div>
+
+    <!-- Cursor Elements -->
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div id="cursor-ring" class="cursor-ring"></div>
+
+    <script>
+        const dot = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
+
+        // Physics State
+        const mouse = { x: -100, y: -100 }; // Raw mouse position
+        const dotPos = { x: -100, y: -100 }; // Dot position (fast)
+        const ringPos = { x: -100, y: -100 }; // Ring position (slow, lerped)
+
+        let isHovering = false;
+        let magneticTarget = null;
+        let idleTimer = 0;
+        let idlePhase = 0;
+
+        // Configuration
+        const LERP_DOT = 0.4;
+        const LERP_RING = 0.08;
+        const MAGNETIC_STRENGTH = 0.2; // How strongly it pulls to center (0-1)
+        const IDLE_TIMEOUT = 100; // Frames before idle triggers
+
+        // Track Mouse Movement
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+
+            // Reset idle
+            idleTimer = 0;
+
+            // Check for interactive targets
+            const target = e.target.closest('a, button, .interactive-btn, .interactive-target');
+
+            if (target) {
+                if (!isHovering) {
+                    isHovering = true;
+                    document.body.classList.add('is-hovering');
+                }
+                magneticTarget = target.getBoundingClientRect();
+            } else {
+                if (isHovering) {
+                    isHovering = false;
+                    document.body.classList.remove('is-hovering');
+                    magneticTarget = null;
+                }
+            }
+        });
+
+        // Animation Loop
+        function animate() {
+            // 1. Calculate Target Coordinates
+            let targetX = mouse.x;
+            let targetY = mouse.y;
+
+            if (isHovering && magneticTarget) {
+                // Magnetic Pull Logic
+                const centerX = magneticTarget.left + magneticTarget.width / 2;
+                const centerY = magneticTarget.top + magneticTarget.height / 2;
+
+                // Mix mouse position with center position for "magnetic" feel
+                targetX = (mouse.x * (1 - MAGNETIC_STRENGTH)) + (centerX * MAGNETIC_STRENGTH);
+                targetY = (mouse.y * (1 - MAGNETIC_STRENGTH)) + (centerY * MAGNETIC_STRENGTH);
+
+                // For the ring, we might snap completely to center or follow smoothly
+                // Let's make the ring snap closer to center than the dot
+            }
+
+            // 2. Linear Interpolation (Lerp)
+            dotPos.x += (targetX - dotPos.x) * LERP_DOT;
+            dotPos.y += (targetY - dotPos.y) * LERP_DOT;
+
+            ringPos.x += (targetX - ringPos.x) * LERP_RING;
+            ringPos.y += (targetY - ringPos.y) * LERP_RING;
+
+            // 3. Idle Drifting (Antigravity Bob)
+            idleTimer++;
+            if (idleTimer > IDLE_TIMEOUT) {
+                idlePhase += 0.02; // speed of drift
+                // Perlin-like drifting using sine waves on different frequencies
+                const driftX = Math.sin(idlePhase) * 5;
+                const driftY = Math.cos(idlePhase * 0.8) * 5;
+
+                ringPos.x += driftX * 0.05; // Apply gently
+                ringPos.y += driftY * 0.05;
+            }
+
+            // 4. Apply Transforms
+            // Using translate3d for GPU acceleration
+            dot.style.transform = `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`;
+            ring.style.transform = `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`;
+
+            requestAnimationFrame(animate);
+        }
+
+        // Start Loop
+        animate();
+    </script>
+</body>
+
+</html>
