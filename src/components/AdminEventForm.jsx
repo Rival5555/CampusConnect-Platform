@@ -55,7 +55,6 @@ export default function AdminEventForm({ onSuccess }) {
     };
 
     return (
-    return (
         <div className="grid gap-8 lg:grid-cols-2">
             {/* Form Section */}
             <div className="rounded-xl bg-white/5 p-6 backdrop-blur-sm border border-white/10">
