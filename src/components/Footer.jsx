@@ -102,10 +102,10 @@ export default function Footer() {
 
                         <div className="flex gap-4">
                             {[
-                                { icon: Twitter, label: 'X (Twitter)', href: '#' },
-                                { icon: Instagram, label: 'Instagram', href: '#' },
-                                { icon: Linkedin, label: 'LinkedIn', href: '#' },
-                                { icon: Facebook, label: 'Facebook', href: '#' },
+                                { icon: Twitter, label: 'X (Twitter)', href: 'https://twitter.com/IamHassan09' },
+                                { icon: Instagram, label: 'Instagram', href: 'https://www.instagram.com/hasanaly_____/' },
+                                { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/hasanali09/' },
+                                { icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/hasanali09' },
                             ].map((Social, index) => (
                                 <a
                                     key={index}
