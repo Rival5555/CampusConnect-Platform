@@ -48,7 +48,7 @@ export default function Login() {
                         <div className="mx-auto mb-4 h-12 w-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center neon-glow">
                             <Shield className="h-6 w-6 text-cyan-400" />
                         </div>
-                        <h1 className="text-2xl font-bold text-white tracking-wider uppercase mb-1">Admin//Portal</h1>
+                        <h1 className="text-2xl font-bold text-white tracking-wider uppercase mb-1">Admin/Portal</h1>
                         <p className="text-xs text-slate-400 font-mono tracking-widest">SECURE_LOGIN_REQUIRED</p>
                     </div>
 
