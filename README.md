@@ -418,12 +418,12 @@ SOFTWARE.
 
 **Project Maintainer**: Your Name
 
-- 📧 Email: your.email@example.com
-- 🐙 GitHub: [@yourusername](https://github.com/Rival5555)
-- 🔗 LinkedIn: [Your LinkedIn](https://linkedin.com/in/hasanali09)
-- 🌐 Website: [your-website.com](https://your-website.com)
+- 📧 Email: hassanali93r@gmail.com
+- 🐙 GitHub: [@Rival5555](https://github.com/Rival5555)
+- 🔗 LinkedIn: [Hassan Ali](https://linkedin.com/in/hasanali09)
+- 🌐 Website: [Campus-Connect]([https://your-website.com](https://unievent-84e46.web.app))
 
-**Project Link**: [https://github.com/yourusername/unievent](https://github.com/Rival5555/CampusConnect-Plateform)
+**Project Link**: [Repository](https://github.com/Rival5555/CampusConnect-Plateform)
 
 ---
 
