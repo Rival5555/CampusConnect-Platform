@@ -51,17 +51,17 @@ The platform leverages Firebase's robust infrastructure for real-time data synch
 <!-- Add your screenshots here -->
 
 ### Student View
-![Home Page](./screenshots/home.png)
+![Home Page](./screenshots/homepage.png)
 *Browse all upcoming campus events*
 
-![Event Details](./screenshots/event-detail.png)
+![Event Details](./screenshots/eventdetails.png)
 *View detailed event information*
 
 ### Admin Panel
-![Admin Login](./screenshots/admin-login.png)
+![Admin Login](./screenshots/adminportal.png)
 *Secure admin authentication*
 
-![Event Management](./screenshots/admin-dashboard.png)
+![Event Management](./screenshots/eventhandler.png)
 *Manage events and posters*
 
 > **Note**: Replace placeholder images with actual screenshots from your application.
