@@ -421,7 +421,7 @@ SOFTWARE.
 - 📧 Email: hassanali93r@gmail.com
 - 🐙 GitHub: [@Rival5555](https://github.com/Rival5555)
 - 🔗 LinkedIn: [Hassan Ali](https://linkedin.com/in/hasanali09)
-- 🌐 Website: [Campus-Connect]([https://your-website.com](https://unievent-84e46.web.app))
+- 🌐 Website: [Campus-Connect](https://unievent-84e46.web.app)
 
 **Project Link**: [Repository](https://github.com/Rival5555/CampusConnect-Plateform)
 
