@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Instagram, Linkedin, Mail, ArrowRight } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Mail, ArrowRight, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
@@ -97,7 +97,19 @@ export default function Footer() {
                             <li><Link to="/help" className="text-gray-400 hover:text-cyan-400 transition-colors">Help Center</Link></li>
                             <li><Link to="/terms" className="text-gray-400 hover:text-cyan-400 transition-colors">Terms of Service</Link></li>
                             <li><Link to="/privacy" className="text-gray-400 hover:text-cyan-400 transition-colors">Privacy Policy</Link></li>
-                            <li><Link to="/contact" className="text-gray-400 hover:text-cyan-400 transition-colors">Contact Us</Link></li>
+
+                            <li className="pt-2">
+                                <a href="mailto:hassanali93r@gmail.com" className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors group">
+                                    <Mail className="w-4 h-4" />
+                                    <span className="text-sm">hassanali93r@gmail.com</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="tel:+923095436018" className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors group">
+                                    <Phone className="w-4 h-4" />
+                                    <span className="text-sm">+92 309 543 6018</span>
+                                </a>
+                            </li>
                         </ul>
 
                         <div className="flex gap-4">
