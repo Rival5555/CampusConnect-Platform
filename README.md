@@ -51,7 +51,7 @@ The platform leverages Firebase's robust infrastructure for real-time data synch
 <!-- Add your screenshots here -->
 
 ### Student View
-![Home Page](./screenshots/homepage.png.png)
+![Home Page](./screenshots/page.png)
 *Browse all upcoming campus events*
 
 ![Event Details](./screenshots/eventdetails.png)
