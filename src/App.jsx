@@ -3,6 +3,9 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import HelpCenter from './pages/HelpCenter';
 import PrivateRoute from './components/PrivateRoute';
 // import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
@@ -18,6 +21,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/help" element={<HelpCenter />} />
             <Route
               path="/admin"
               element={
