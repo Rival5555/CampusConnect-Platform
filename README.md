@@ -1,4 +1,4 @@
-# UniEvent 🎓
+# UniEvent 🎓 CampusConnect-Platform
 
 > A centralized campus event discovery platform that makes it easy for students to explore and participate in university events.
 
@@ -6,7 +6,7 @@
 [![Firebase](https://img.shields.io/badge/Firebase-Powered-orange.svg)](https://firebase.google.com/)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-success.svg)]([https://your-project-id.web.app](https://unievent-84e46.web.app))
 
-🌐 **Live Demo**: ([https://your-project-id.web.app]([https://your-project-id.web.app](https://unievent-84e46.web.app))
+🌐 **Live Demo**: ([Website-Link](https://unievent-84e46.web.app))
 
 ## 📋 Table of Contents
 
